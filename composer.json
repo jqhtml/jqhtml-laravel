@@ -1,0 +1,38 @@
+{
+    "name": "jqhtml/laravel",
+    "description": "Laravel integration for jqhtml - use jqhtml components in Blade templates with automatic hydration",
+    "keywords": ["laravel", "jqhtml", "components", "blade", "jquery", "frontend"],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://jqhtml.org/",
+    "authors": [
+        {
+            "name": "Brian Hanson",
+            "email": "brian@hanson.xyz",
+            "homepage": "https://hanson.xyz"
+        }
+    ],
+    "support": {
+        "docs": "https://jqhtml.org/",
+        "issues": "https://github.com/jqhtml/jqhtml-laravel/issues"
+    },
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/view": "^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jqhtml\\Laravel\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jqhtml\\Laravel\\JqhtmlServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
