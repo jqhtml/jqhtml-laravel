@@ -55,7 +55,7 @@ import jqhtml, { init_jquery_plugin } from '@jqhtml/core';
 init_jquery_plugin($);
 
 // Import your jqhtml templates
-import '../jqhtml/My_Component.jqhtml';
+import '../jqhtml/MyComponent.jqhtml';
 
 // Hydrate components on page load
 $(document).ready(() => {
@@ -70,17 +70,17 @@ $(document).ready(() => {
 Create `.jqhtml` template files in `resources/jqhtml/`:
 
 ```html
-<!-- resources/jqhtml/Alert_Box.jqhtml -->
-<Define:Alert_Box tag="div" class="alert">
+<!-- resources/jqhtml/AlertBox.jqhtml -->
+<Define:AlertBox tag="div" class="alert">
     <strong><%= this.args.title %></strong>
     <p><%= this.args.message %></p>
-</Define:Alert_Box>
+</Define:AlertBox>
 ```
 
 Import templates in your `app.js`:
 
 ```javascript
-import '../jqhtml/Alert_Box.jqhtml';
+import '../jqhtml/AlertBox.jqhtml';
 ```
 
 ### Using Components in Blade
@@ -88,22 +88,22 @@ import '../jqhtml/Alert_Box.jqhtml';
 Use jqhtml component syntax directly in Blade templates:
 
 ```blade
-<Alert_Box $title="Notice" $message="This is a jqhtml component." />
+<AlertBox $title="Notice" $message="This is a jqhtml component." />
 ```
 
 Pass PHP variables with the `:` prefix:
 
 ```blade
 @php $user = Auth::user(); @endphp
-<User_Card :$name="$user->name" :$email="$user->email" />
+<UserCard :$name="$user->name" :$email="$user->email" />
 ```
 
 Components can contain content:
 
 ```blade
-<Card_Component $title="Welcome">
+<CardComponent $title="Welcome">
     <p>This content is available via content() in the template.</p>
-</Card_Component>
+</CardComponent>
 ```
 
 ### Components with JavaScript Classes
@@ -111,10 +111,10 @@ Components can contain content:
 For components needing lifecycle methods or state, create a companion JS class:
 
 ```javascript
-// resources/js/components/Data_Table.js
-import { Jqhtml_Component } from '@jqhtml/core';
+// resources/js/components/DataTable.js
+import { JqhtmlComponent } from '@jqhtml/core';
 
-export class Data_Table extends Jqhtml_Component {
+export class DataTable extends JqhtmlComponent {
     on_create() {
         this.data.rows = [];
     }
@@ -125,13 +125,15 @@ export class Data_Table extends Jqhtml_Component {
 }
 ```
 
+The `JqhtmlComponent` export can be named any variable in your code; `JqhtmlComponent` is the standard convention.
+
 Register the class in `app.js`:
 
 ```javascript
 import jqhtml from '@jqhtml/core';
-import { Data_Table } from './components/Data_Table.js';
+import { DataTable } from './components/DataTable.js';
 
-jqhtml.register_component('Data_Table', Data_Table);
+jqhtml.register_component('DataTable', DataTable);
 ```
 
 ### Hydration
@@ -161,16 +163,16 @@ document.addEventListener('jqhtml:ready', () => {
 
 ## How It Works
 
-1. Blade precompiler transforms `<Component_Name />` tags into placeholder divs
+1. Blade precompiler transforms `<ComponentName />` tags into placeholder divs
 2. Server sends HTML with `_Component_Init` placeholders
 3. Client-side `jqhtml.boot()` finds placeholders and hydrates them into live components
 
 ```
-Blade:  <Alert_Box $title="Hi" />
+Blade:  <AlertBox $title="Hi" />
   ↓
-HTML:   <div class="_Component_Init" data-component-init-name="Alert_Box" data-component-args='{"title":"Hi"}'></div>
+HTML:   <div class="_Component_Init" data-component-init-name="AlertBox" data-component-args='{"title":"Hi"}'></div>
   ↓
-Live:   <div class="Alert_Box alert">...</div>
+Live:   <div class="AlertBox alert">...</div>
 ```
 
 ## Documentation

@@ -66,7 +66,16 @@ export const __jqhtml_component_name = ${JSON.stringify(compiled.componentName)}
                 };
             } catch (error: any) {
                 // Format error for Vite's error overlay
-                const message = error.message || 'jqhtml compilation failed';
+                let message = error.message || 'jqhtml compilation failed';
+
+                // Append context and suggestion from parser if available
+                if (error.context) {
+                    message += `\n\nContext: ${error.context}`;
+                }
+                if (error.suggestion) {
+                    message += `\nSuggestion: ${error.suggestion}`;
+                }
+
                 const line = error.line || 1;
                 const column = error.column || 0;
 

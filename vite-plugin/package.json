@@ -1,6 +1,6 @@
 {
   "name": "@jqhtml/vite-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vite plugin for jqhtml template compilation",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -17,9 +17,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "prepublishOnly": "npm run build"
+    "build": "npm version patch --no-git-tag-version && tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
   },
   "keywords": [
     "vite",
