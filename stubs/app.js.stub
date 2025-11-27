@@ -1,0 +1,18 @@
+import './bootstrap';
+
+// jQuery setup (required by jqhtml)
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+
+// jqhtml core
+import jqhtml, { boot, init_jquery_plugin } from '@jqhtml/core';
+init_jquery_plugin($);
+
+// Register your jqhtml components here:
+// import MyComponent from '../jqhtml/MyComponent.jqhtml';
+// jqhtml.register(MyComponent);
+
+// Boot jqhtml when DOM is ready
+$(document).ready(async () => {
+    await boot();
+});

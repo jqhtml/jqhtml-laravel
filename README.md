@@ -13,55 +13,13 @@ This package enables jqhtml components in Laravel Blade templates with automatic
 
 ## Installation
 
-### 1. Install PHP Package
-
 ```bash
 composer require jqhtml/laravel
+php artisan jqhtml:install
+npm install
 ```
 
-### 2. Install npm Packages
-
-```bash
-npm install @jqhtml/core @jqhtml/vite-plugin jquery
-```
-
-### 3. Configure Vite
-
-```javascript
-// vite.config.js
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import jqhtml from '@jqhtml/vite-plugin';
-
-export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/js/app.js'],
-            refresh: true,
-        }),
-        jqhtml(),
-    ],
-});
-```
-
-### 4. Set Up app.js
-
-```javascript
-// resources/js/app.js
-import $ from 'jquery';
-window.jQuery = window.$ = $;
-
-import jqhtml, { init_jquery_plugin } from '@jqhtml/core';
-init_jquery_plugin($);
-
-// Import your jqhtml templates
-import '../jqhtml/MyComponent.jqhtml';
-
-// Hydrate components on page load
-$(document).ready(() => {
-    jqhtml.boot();
-});
-```
+That's it! The install command configures Vite and app.js automatically.
 
 ## Usage
 
@@ -77,10 +35,13 @@ Create `.jqhtml` template files in `resources/jqhtml/`:
 </Define:AlertBox>
 ```
 
-Import templates in your `app.js`:
+### Registering Components
+
+Import and register components in `resources/js/app.js`:
 
 ```javascript
-import '../jqhtml/AlertBox.jqhtml';
+import AlertBox from '../jqhtml/AlertBox.jqhtml';
+jqhtml.register(AlertBox);
 ```
 
 ### Using Components in Blade
@@ -115,6 +76,8 @@ For components needing lifecycle methods or state, create a companion JS class:
 import { JqhtmlComponent } from '@jqhtml/core';
 
 export class DataTable extends JqhtmlComponent {
+    static component_name = 'DataTable';
+
     on_create() {
         this.data.rows = [];
     }
@@ -125,32 +88,29 @@ export class DataTable extends JqhtmlComponent {
 }
 ```
 
-The `JqhtmlComponent` export can be named any variable in your code; `JqhtmlComponent` is the standard convention.
-
 Register the class in `app.js`:
 
 ```javascript
-import jqhtml from '@jqhtml/core';
 import { DataTable } from './components/DataTable.js';
-
-jqhtml.register_component('DataTable', DataTable);
+jqhtml.register(DataTable);
 ```
+
+The `JqhtmlComponent` export can be named any variable in your code; `JqhtmlComponent` is the standard convention.
 
 ### Hydration
 
-The `jqhtml.boot()` function finds all component placeholders in the DOM and hydrates them into live components:
+The `boot()` function finds all component placeholders in the DOM and hydrates them into live components:
 
 ```javascript
-// Basic usage
-jqhtml.boot();
+import { boot } from '@jqhtml/core';
 
-// With promise
-jqhtml.boot().then(() => {
-    console.log('All components ready');
+// Basic usage (already set up by jqhtml:install)
+$(document).ready(async () => {
+    await boot();
 });
 
 // Hydrate specific container
-jqhtml.boot(document.getElementById('my-section'));
+boot(document.getElementById('my-section'));
 ```
 
 Listen for the ready event:
@@ -165,7 +125,7 @@ document.addEventListener('jqhtml:ready', () => {
 
 1. Blade precompiler transforms `<ComponentName />` tags into placeholder divs
 2. Server sends HTML with `_Component_Init` placeholders
-3. Client-side `jqhtml.boot()` finds placeholders and hydrates them into live components
+3. Client-side `boot()` finds placeholders and hydrates them into live components
 
 ```
 Blade:  <AlertBox $title="Hi" />
@@ -173,6 +133,55 @@ Blade:  <AlertBox $title="Hi" />
 HTML:   <div class="_Component_Init" data-component-init-name="AlertBox" data-component-args='{"title":"Hi"}'></div>
   ↓
 Live:   <div class="AlertBox alert">...</div>
+```
+
+## Manual Installation
+
+If you prefer manual setup instead of `php artisan jqhtml:install`:
+
+### 1. Install npm packages
+
+```bash
+npm install @jqhtml/core @jqhtml/vite-plugin jquery
+```
+
+### 2. Configure Vite
+
+```javascript
+// vite.config.js
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import jqhtml from '@jqhtml/vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        jqhtml(),
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+    ],
+});
+```
+
+### 3. Set up app.js
+
+```javascript
+// resources/js/app.js
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+
+import jqhtml, { boot, init_jquery_plugin } from '@jqhtml/core';
+init_jquery_plugin($);
+
+// Import and register your components
+import MyComponent from '../jqhtml/MyComponent.jqhtml';
+jqhtml.register(MyComponent);
+
+// Boot when DOM is ready
+$(document).ready(async () => {
+    await boot();
+});
 ```
 
 ## Documentation
