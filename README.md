@@ -13,10 +13,12 @@ This package provides a Blade precompiler that lets you use jqhtml component syn
 ## Installation
 
 ```bash
-composer require jqhtml/laravel
+composer require jqhtml/laravel:dev-main
 php artisan jqhtml:install
 npm install
 ```
+
+The package is currently in development and requires the `dev-main` branch.
 
 The install command automatically:
 - Adds npm dependencies to package.json
