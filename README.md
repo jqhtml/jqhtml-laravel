@@ -53,11 +53,66 @@ Components can contain content:
 Create `.jqhtml` files in `resources/jqhtml/`, then register them in `resources/js/app.js`:
 
 ```javascript
+// Template-only components
 import AlertBox from '../jqhtml/AlertBox.jqhtml';
 import UserCard from '../jqhtml/UserCard.jqhtml';
 
+// Interactive components with JS class
+import Counter from '../jqhtml/Counter.js';
+
 jqhtml.register(AlertBox);
 jqhtml.register(UserCard);
+jqhtml.register(Counter);
+```
+
+### Interactive Components
+
+For components with behavior, create a JS class alongside the template:
+
+```html
+<!-- resources/jqhtml/Counter.jqhtml -->
+<Define:Counter tag="div" class="counter">
+    <button $sid="decrement">-</button>
+    <span $sid="display"><%= this.data.count %></span>
+    <button $sid="increment">+</button>
+</Define:Counter>
+```
+
+```javascript
+// resources/jqhtml/Counter.js
+import { Jqhtml_Component } from '@jqhtml/core';
+import CounterTemplate from './Counter.jqhtml';
+
+class Counter extends Jqhtml_Component {
+    on_create() {
+        this.data.count = this.args.initial || 0;
+    }
+
+    on_ready() {
+        this.$sid('increment').on('click', () => {
+            this.data.count++;
+            this.$sid('display').text(this.data.count);
+        });
+        this.$sid('decrement').on('click', () => {
+            this.data.count--;
+            this.$sid('display').text(this.data.count);
+        });
+    }
+}
+
+export default Counter;
+```
+
+#### Note on Minification
+
+If your build uses class name mangling, you must either:
+
+1. Add `static component_name = 'Counter'` to each component class, or
+2. Use explicit registration:
+
+```javascript
+jqhtml.register_template(CounterTemplate);
+jqhtml.register_component('Counter', Counter);
 ```
 
 ### How It Works
