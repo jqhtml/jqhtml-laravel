@@ -137,7 +137,7 @@ If you prefer manual setup instead of `php artisan jqhtml:install`:
 
 1. Install npm packages:
    ```bash
-   npm install @jqhtml/core @jqhtml/vite-plugin jquery
+   npm install @jqhtml/core@latest @jqhtml/vite-plugin@latest jquery
    ```
 
 2. Add the plugin to `vite.config.js`:

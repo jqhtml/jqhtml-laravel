@@ -64,8 +64,8 @@ class InstallCommand extends Command
             $packages['dependencies'] = array_merge(
                 $packages['dependencies'] ?? [],
                 [
-                    '@jqhtml/core' => '^2.3.0',
-                    '@jqhtml/vite-plugin' => '^0.0.2',
+                    '@jqhtml/core' => 'latest',
+                    '@jqhtml/vite-plugin' => 'latest',
                     'jquery' => '^3.7.0',
                 ]
             );
